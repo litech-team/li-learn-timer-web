@@ -16,7 +16,7 @@
     </aside>
     <div class="column-responsive column-80">
         <div class="tasks view content">
-            <h3><?= h($task->Array) ?></h3>
+            <h3><?= h($task->id) ?></h3>
             <table>
                 <tr>
                     <th><?= __('Id') ?></th>
@@ -32,7 +32,7 @@
                 </tr>
                 <tr>
                     <th><?= __('User') ?></th>
-                    <td><?= $task->has('user') ? $this->Html->link($task->user->Array, ['controller' => 'Users', 'action' => 'view', $task->user->id]) : '' ?></td>
+                    <td><?= $task->has('user') ? $this->Html->link($task->user->id, ['controller' => 'Users', 'action' => 'view', $task->user->id]) : '' ?></td>
                 </tr>
                 <tr>
                     <th><?= __('Pomodoro Count') ?></th>

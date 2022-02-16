@@ -32,7 +32,7 @@
                     <td><?= $this->Number->format($task->importance_level) ?></td>
                     <td><?= $this->Number->format($task->urgency_level) ?></td>
                     <td><?= h($task->status) ?></td>
-                    <td><?= $task->has('user') ? $this->Html->link($task->user->Array, ['controller' => 'Users', 'action' => 'view', $task->user->id]) : '' ?></td>
+                    <td><?= $task->has('user') ? $this->Html->link($task->user->id, ['controller' => 'Users', 'action' => 'view', $task->user->id]) : '' ?></td>
                     <td><?= h($task->created) ?></td>
                     <td><?= h($task->modified) ?></td>
                     <td class="actions">

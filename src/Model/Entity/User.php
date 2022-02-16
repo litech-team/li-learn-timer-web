@@ -8,7 +8,7 @@ use Cake\ORM\Entity;
 /**
  * User Entity
  *
- * @property int $id
+ * @property string $id
  * @property string $username
  * @property string $email
  * @property string $password
@@ -16,6 +16,8 @@ use Cake\ORM\Entity;
  * @property int $unlock_ticket_count
  * @property \Cake\I18n\FrozenTime $created
  * @property \Cake\I18n\FrozenTime $modified
+ *
+ * @property \App\Model\Entity\Task[] $tasks
  */
 class User extends Entity
 {
@@ -32,9 +34,11 @@ class User extends Entity
         'username' => true,
         'email' => true,
         'password' => true,
+        'serial_number' => true,
         'unlock_ticket_count' => true,
         'created' => true,
         'modified' => true,
+        'tasks' => true,
     ];
 
     /**

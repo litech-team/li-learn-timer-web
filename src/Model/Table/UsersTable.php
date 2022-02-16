@@ -11,6 +11,8 @@ use Cake\Validation\Validator;
 /**
  * Users Model
  *
+ * @property \App\Model\Table\TasksTable&\Cake\ORM\Association\HasMany $Tasks
+ *
  * @method \App\Model\Entity\User newEmptyEntity()
  * @method \App\Model\Entity\User newEntity(array $data, array $options = [])
  * @method \App\Model\Entity\User[] newEntities(array $data, array $options = [])
@@ -40,10 +42,14 @@ class UsersTable extends Table
         parent::initialize($config);
 
         $this->setTable('users');
-        $this->setDisplayField(['id', 'serial_number']);
-        $this->setPrimaryKey(['id', 'serial_number']);
+        $this->setDisplayField('id');
+        $this->setPrimaryKey('id');
 
         $this->addBehavior('Timestamp');
+
+        $this->hasMany('Tasks', [
+            'foreignKey' => 'user_id',
+        ]);
     }
 
     /**
@@ -55,7 +61,8 @@ class UsersTable extends Table
     public function validationDefault(Validator $validator): Validator
     {
         $validator
-            ->integer('id')
+            ->scalar('id')
+            ->maxLength('id', 255)
             ->allowEmptyString('id', null, 'create');
 
         $validator
@@ -78,7 +85,8 @@ class UsersTable extends Table
         $validator
             ->scalar('serial_number')
             ->maxLength('serial_number', 8)
-            ->allowEmptyString('serial_number', null, 'create');
+            ->requirePresence('serial_number', 'create')
+            ->notEmptyString('serial_number');
 
         $validator
             ->integer('unlock_ticket_count')
