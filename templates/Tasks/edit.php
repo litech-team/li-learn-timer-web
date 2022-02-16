@@ -29,6 +29,7 @@
                     echo $this->Form->control('urgency_level');
                     echo $this->Form->control('memo');
                     echo $this->Form->control('status');
+                    echo $this->Form->control('user_id', ['options' => $users]);
                 ?>
             </fieldset>
             <?= $this->Form->button(__('Submit')) ?>

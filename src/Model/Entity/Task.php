@@ -39,6 +39,7 @@ class Task extends Entity
         'urgency_level' => true,
         'memo' => true,
         'status' => true,
+        'user_id' => true,
         'created' => true,
         'modified' => true,
         'user' => true,

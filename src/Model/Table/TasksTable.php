@@ -42,8 +42,8 @@ class TasksTable extends Table
         parent::initialize($config);
 
         $this->setTable('tasks');
-        $this->setDisplayField(['id', 'user_id']);
-        $this->setPrimaryKey(['id', 'user_id']);
+        $this->setDisplayField('id');
+        $this->setPrimaryKey('id');
 
         $this->addBehavior('Timestamp');
 
