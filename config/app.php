@@ -76,7 +76,7 @@ return [
      *   You should treat it as extremely sensitive data.
      */
     'Security' => [
-        'salt' => env('SECURITY_SALT', 'e9ptvhnm94s34wx5vjq6hyfze6yuxxh2m5uk5qvi'),
+        'salt' => env('SECURITY_SALT'),
     ],
 
     /*
@@ -293,7 +293,11 @@ return [
             'className' => Connection::class,
             'driver' => Mysql::class,
             'persistent' => false,
+<<<<<<< HEAD
             'timezone' => 'UTC',
+=======
+            'timezone' => '+09:00',
+>>>>>>> origin/update/#9
 
             /*
              * For MariaDB/MySQL the internal default changed from utf8 to utf8mb4, aka full utf-8 support, in CakePHP 3.6
