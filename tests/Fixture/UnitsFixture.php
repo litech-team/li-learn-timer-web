@@ -19,9 +19,9 @@ class UnitsFixture extends TestFixture
     {
         $this->records = [
             [
-                'serial_number' => '2566f7f6-caef-4042-953a-ed4cb27e3711',
+                'serial_number' => 'c70df75e-0014-4713-a733-035c8484c6bd',
                 'status' => 'Lorem ipsum dolor ',
-                'manufactured' => '2022-02-16 13:55:49',
+                'manufactured' => '2022-02-17 07:44:38',
             ],
         ];
         parent::init();
