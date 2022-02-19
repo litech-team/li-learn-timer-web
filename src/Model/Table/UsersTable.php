@@ -62,7 +62,7 @@ class UsersTable extends Table
     {
         $validator
             ->scalar('id')
-            ->maxLength('id', 255)
+            ->maxLength('id', 23)
             ->allowEmptyString('id', null, 'create');
 
         $validator
@@ -78,19 +78,15 @@ class UsersTable extends Table
 
         $validator
             ->scalar('password')
-            ->maxLength('password', 100)
+            ->lengthBetween('password', [8, 100])
             ->requirePresence('password', 'create')
             ->notEmptyString('password');
 
         $validator
             ->scalar('serial_number')
-            ->maxLength('serial_number', 8)
+            ->lengthBetween('serial_number', [8, 8])
             ->requirePresence('serial_number', 'create')
             ->notEmptyString('serial_number');
-
-        $validator
-            ->integer('unlock_ticket_count')
-            ->notEmptyString('unlock_ticket_count');
 
         return $validator;
     }
