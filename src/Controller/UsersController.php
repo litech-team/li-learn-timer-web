@@ -26,23 +26,42 @@ class UsersController extends AppController
 
     public function add()
     {
+        $title = 'アカウント作成';
         $user = $this->Users->newEmptyEntity();
         if ($this->request->is('post')) {
+            $this->loadModel('Units');
             $data['id'] = bin2hex(random_bytes(5)) . uniqid();
             $data += $this->request->getData();
+            $serialNumber = $this->Units
+                ->find('all')
+                ->where(['serial_number' => $data['serial_number'], 'status' => '未登録']);
+
+            if ($serialNumber->count() === 0) {
+                $this->Flash->error(__('入力されたシリアル番号は既に登録されているか、存在しません。'));
+                $this->set(compact('user', 'title'));
+                return;
+            } else if ($serialNumber->count() > 1) {
+                $this->Flash->error(__('入力されたシリアル番号はデータベースに複数存在します。'));
+                $this->set(compact('user', 'title'));
+                return;
+            }
+
             $user = $this->Users->patchEntity($user, $data);
-            if ($this->Users->save($user)) {
-                $this->Flash->success(__('The user has been saved.'));
+            $serialNumber = $serialNumber->first();
+            $serialNumber->status = '登録済み';
+            if ($this->Users->save($user) && $this->Units->save($serialNumber)) {
+                $this->Flash->success(__('アカウントの作成が完了しました。'));
 
                 return $this->redirect(['action' => 'index']);
             }
-            $this->Flash->error(__('The user could not be saved. Please, try again.'));
+            $this->Flash->error(__('アカウントの作成に失敗しました。もう一度お試しください。'));
         }
-        $this->set(compact('user'));
+        $this->set(compact('user', 'title'));
     }
 
     public function login()
     {
+        $title = 'ログイン';
         $this->request->allowMethod(['get', 'post']);
         $result = $this->Authentication->getResult();
         if ($result->isValid()) {
@@ -56,8 +75,9 @@ class UsersController extends AppController
 
         // ユーザーの送信と認証に失敗した場合のエラー表示
         if ($this->request->is('post') && !$result->isValid()) {
-            $this->Flash->error(__('Invalid email or password'));
+            $this->Flash->error(__('メールアドレス、またはパスワードが間違っています。'));
         }
+        $this->set(compact('title'));
     }
 
     public function logout()
