@@ -3,6 +3,7 @@
  * @var \App\View\AppView $this
  * @var \App\Model\Entity\User $user
  */
+$this->assign('title', $title);
 ?>
 <div class="users form">
     <?= $this->Form->create($user) ?>
