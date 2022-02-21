@@ -1,3 +1,4 @@
+<?php $this->assign('title', $title); ?>
 <div class="users form">
     <?= $this->Flash->render() ?>
     <?= $this->Form->create() ?>

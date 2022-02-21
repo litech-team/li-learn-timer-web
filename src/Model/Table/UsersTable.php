@@ -47,9 +47,10 @@ class UsersTable extends Table
 
         $this->addBehavior('Timestamp');
 
-        $this->hasMany('Tasks', [
-            'foreignKey' => 'user_id',
-        ]);
+        $this->hasMany('Tasks')
+            ->setForeignKey('user_id');
+        $this->belongsTo('Units')
+            ->setForeignKey('serial_number');
     }
 
     /**
@@ -67,26 +68,26 @@ class UsersTable extends Table
 
         $validator
             ->scalar('username')
-            ->maxLength('username', 255)
-            ->requirePresence('username', 'create')
-            ->notEmptyString('username');
+            ->maxLength('username', 255, 'ユーザー名は255文字以内で入力してください。')
+            ->requirePresence('username', 'create', '値が不正です。')
+            ->notEmptyString('username', '入力必須項目です。');
 
         $validator
-            ->email('email')
-            ->requirePresence('email', 'create')
-            ->notEmptyString('email');
+            ->email('email', false, 'メールアドレスを正しい形式で入力してください。')
+            ->requirePresence('email', 'create', '値が不正です。')
+            ->notEmptyString('email', '入力必須項目です。');
 
         $validator
             ->scalar('password')
-            ->lengthBetween('password', [8, 100])
-            ->requirePresence('password', 'create')
-            ->notEmptyString('password');
+            ->lengthBetween('password', [8, 100], 'パスワードは8文字以上100文字以内で入力してください。')
+            ->requirePresence('password', 'create', '値が不正です。')
+            ->notEmptyString('password', '入力必須項目です。');
 
         $validator
             ->scalar('serial_number')
             ->lengthBetween('serial_number', [8, 8])
-            ->requirePresence('serial_number', 'create')
-            ->notEmptyString('serial_number');
+            ->requirePresence('serial_number', 'create', '値が不正です。')
+            ->notEmptyString('serial_number', '入力必須項目です。');
 
         return $validator;
     }
