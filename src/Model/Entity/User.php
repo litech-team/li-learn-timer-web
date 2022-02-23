@@ -32,7 +32,8 @@ class User extends Entity
      * @var array
      */
     protected $_accessible = [
-        '*' => true
+        '*' => true,
+        'id' => false
     ];
 
     protected function _setPassword($password)

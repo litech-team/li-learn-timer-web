@@ -4,8 +4,8 @@
     <?= $this->Form->create() ?>
     <fieldset>
       <legend><?= __('Login') ?></legend>
-      <?= $this->Form->control('email', ['required' => true]) ?>
-      <?= $this->Form->control('password', ['required' => true]) ?>
+      <?= $this->Form->control('serial_number', ['required' => true, 'label' => 'シリアル番号']) ?>
+      <?= $this->Form->control('password', ['required' => true, 'label' => 'パスワード']) ?>
     </fieldset>
     <?= $this->Form->submit(__('Login')); ?>
     <?= $this->Form->end() ?>
