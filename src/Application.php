@@ -123,7 +123,7 @@ class Application extends BaseApplication
 
         $authenticationService->loadIdentifier('Authentication.Password', [
             'fields' => [
-                'username' => 'email',
+                'username' => 'serial_number',
                 'password' => 'password',
             ]
         ]);
@@ -131,7 +131,7 @@ class Application extends BaseApplication
         $authenticationService->loadAuthenticator('Authentication.Session');
         $authenticationService->loadAuthenticator('Authentication.Form', [
             'fields' => [
-                'username' => 'email',
+                'username' => 'serial_number',
                 'password' => 'password',
             ],
             'loginUrl' => '/li-learn-timer/users/login',

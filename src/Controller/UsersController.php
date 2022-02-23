@@ -30,18 +30,13 @@ class UsersController extends AppController
         $user = $this->Users->newEmptyEntity();
         if ($this->request->is('post')) {
             $this->loadModel('Units');
-            $data['id'] = bin2hex(random_bytes(5)) . uniqid();
-            $data += $this->request->getData();
+            $data = $this->request->getData();
             $serialNumber = $this->Units
                 ->find('all')
                 ->where(['serial_number' => $data['serial_number'], 'status' => '未登録']);
 
-            if ($serialNumber->count() === 0) {
-                $this->Flash->error(__('入力されたシリアル番号は既に登録されているか、存在しません。'));
-                $this->set(compact('user', 'title'));
-                return;
-            } else if ($serialNumber->count() > 1) {
-                $this->Flash->error(__('入力されたシリアル番号はデータベースに複数存在します。'));
+            if (!$serialNumber->count()) {
+                $this->Flash->error(__('入力されたシリアル番号は存在しないか、既に登録されています。'));
                 $this->set(compact('user', 'title'));
                 return;
             }
