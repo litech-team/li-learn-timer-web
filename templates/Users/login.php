@@ -1,7 +1,11 @@
 <?php $this->assign('title', $title); ?>
 <div class="users form">
     <?= $this->Flash->render() ?>
-    <?= $this->Form->create() ?>
+    <?=
+      $this->Form->create(null, [
+      'url' => $this->Url->build(['controller' => 'Users',  'action' => 'login'])
+      ])
+    ?>
     <fieldset>
       <legend><?= __('Login') ?></legend>
       <?= $this->Form->control('serial_number', ['required' => true, 'label' => 'シリアル番号']) ?>

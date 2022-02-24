@@ -6,7 +6,11 @@
 $this->assign('title', $title);
 ?>
 <div class="users form">
-    <?= $this->Form->create($user) ?>
+    <?=
+      $this->Form->create(null, [
+      'url' => $this->Url->build(['controller' => 'Users',  'action' => 'add'])
+      ])
+    ?>
     <fieldset>
         <legend><?= __('Add User') ?></legend>
         <?php
