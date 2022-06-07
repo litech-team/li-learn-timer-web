@@ -1,26 +1,86 @@
-name: CD
+name: CI
 
 on:
+  push:
+    branches:
+      - '4.x'
+      - '4.next'
+      - '5.x'
   pull_request:
     branches:
       - '*'
 
 jobs:
-  test-frontend:
-    runs-on: ubuntu-latest
+  testsuite:
+    runs-on: ubuntu-18.04
+    strategy:
+      fail-fast: false
+      matrix:
+        php-version: ['7.2', '7.4', '8.0', '8.1']
+    name: PHP ${{ matrix.php-version }}
+
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
+    - uses: actions/checkout@v2
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v2
-        with:
-          node-version: 14.x
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: ${{ matrix.php-version }}
+        extensions: mbstring, intl, pdo_sqlite
+        coverage: none
 
-      - name: Install NPM packages (use Yarn)
-        run: yarn install --frozen-lockfile
-        working-directory: ./frontend
+    - name: Composer install
+      run: |
+        if [[ ${{ matrix.php-version }} == '8.1' ]]; then
+          composer update --ignore-platform-reqs
+        else
+          composer update
+        fi
+        composer run-script post-install-cmd --no-interaction
 
-      - name: Test
-        run: yarn test
-        working-directory: ./frontend
+    - name: Run PHPUnit
+      run: |
+        cp config/app_local.example.php config/app_local.php
+        vendor/bin/phpunit
+      env:
+        DATABASE_TEST_URL: sqlite://./testdb.sqlite
+
+  coding-standard:
+    name: Coding Standard
+    runs-on: ubuntu-18.04
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '7.2'
+        extensions: mbstring, intl
+        coverage: none
+
+    - name: Composer install
+      run: composer install
+
+    - name: Run PHP CodeSniffer
+      run: composer cs-check
+
+  static-analysis:
+    name: Static Analysis
+    runs-on: ubuntu-18.04
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '7.2'
+        extensions: mbstring, intl
+        coverage: none
+
+    - name: Composer install
+      run: composer require --dev phpstan/phpstan:^1.0.0
+
+    - name: Run phpstan
+      run: vendor/bin/phpstan
