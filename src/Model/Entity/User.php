@@ -3,20 +3,20 @@ declare(strict_types=1);
 
 namespace App\Model\Entity;
 
-use Cake\Auth\DefaultPasswordHasher;
 use Cake\ORM\Entity;
 
 /**
  * User Entity
  *
- * @property string $id
- * @property string $username
+ * @property int $id
  * @property string $email
  * @property string $password
- * @property string $serial_number
+ * @property string $ip
+ * @property string $mac
+ * @property string $is_tmp_account
  * @property int $unlock_ticket_count
- * @property \Cake\I18n\FrozenTime $created
- * @property \Cake\I18n\FrozenTime $modified
+ * @property \Cake\I18n\FrozenTime|null $created
+ * @property \Cake\I18n\FrozenTime|null $modified
  *
  * @property \App\Model\Entity\Task[] $tasks
  */
@@ -29,24 +29,24 @@ class User extends Entity
      * be mass assigned. For security purposes, it is advised to set '*' to false
      * (or remove it), and explicitly make individual fields accessible as needed.
      *
-     * @var array
+     * @var array<string, bool>
      */
     protected $_accessible = [
-        '*' => true,
-        'id' => false
+        'email' => true,
+        'password' => true,
+        'ip' => true,
+        'mac' => true,
+        'is_tmp_account' => true,
+        'unlock_ticket_count' => true,
+        'created' => true,
+        'modified' => true,
+        'tasks' => true,
     ];
-
-    protected function _setPassword($password)
-    {
-        if (strlen($password) > 0) {
-            return (new DefaultPasswordHasher)->hash($password);
-        }
-    }
 
     /**
      * Fields that are excluded from JSON versions of the entity.
      *
-     * @var array
+     * @var array<string>
      */
     protected $_hidden = [
         'password',

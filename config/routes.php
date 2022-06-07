@@ -56,8 +56,7 @@ return static function (RouteBuilder $routes) {
          * ...and connect the rest of 'Pages' controller's URLs.
          */
         $builder->connect('/pages/*', 'Pages::display');
-        $builder->connect('/li-learn-timer/{controller}', ['action' => 'index']);
-        $builder->connect('/li-learn-timer/{controller}/{action}/*', []);
+
         /*
          * Connect catchall routes for all controllers.
          *

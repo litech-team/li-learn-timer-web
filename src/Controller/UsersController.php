@@ -4,19 +4,18 @@ declare(strict_types=1);
 namespace App\Controller;
 
 /**
- * アカウント関連のコントローラークラス
+ * Users Controller
  *
  * @property \App\Model\Table\UsersTable $Users
  * @method \App\Model\Entity\User[]|\Cake\Datasource\ResultSetInterface paginate($object = null, array $settings = [])
  */
 class UsersController extends AppController
 {
-    public function beforeFilter(\Cake\Event\EventInterface $event)
-    {
-        parent::beforeFilter($event);
-        $this->Authentication->addUnauthenticatedActions(['login', 'add']);
-    }
-
+    /**
+     * Index method
+     *
+     * @return \Cake\Http\Response|null|void Renders view
+     */
     public function index()
     {
         $users = $this->paginate($this->Users);
@@ -24,63 +23,83 @@ class UsersController extends AppController
         $this->set(compact('users'));
     }
 
+    /**
+     * View method
+     *
+     * @param string|null $id User id.
+     * @return \Cake\Http\Response|null|void Renders view
+     * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
+     */
+    public function view($id = null)
+    {
+        $user = $this->Users->get($id, [
+            'contain' => ['Tasks'],
+        ]);
+
+        $this->set(compact('user'));
+    }
+
+    /**
+     * Add method
+     *
+     * @return \Cake\Http\Response|null|void Redirects on successful add, renders view otherwise.
+     */
     public function add()
     {
-        $title = 'アカウント作成';
         $user = $this->Users->newEmptyEntity();
         if ($this->request->is('post')) {
-            $this->loadModel('Units');
-            $data = $this->request->getData();
-            $serialNumber = $this->Units
-                ->find('all')
-                ->where(['serial_number' => $data['serial_number'], 'status' => '未登録']);
-
-            if (!$serialNumber->count()) {
-                $this->Flash->error(__('入力されたシリアル番号は存在しないか、既に登録されています。'));
-                $this->set(compact('user', 'title'));
-                return;
-            }
-
-            $user = $this->Users->patchEntity($user, $data);
-            $serialNumber = $serialNumber->first();
-            $serialNumber->status = '登録済み';
-            if ($this->Users->save($user) && $this->Units->save($serialNumber)) {
-                $this->Flash->success(__('アカウントの作成が完了しました。'));
+            $user = $this->Users->patchEntity($user, $this->request->getData());
+            if ($this->Users->save($user)) {
+                $this->Flash->success(__('The user has been saved.'));
 
                 return $this->redirect(['action' => 'index']);
             }
-            $this->Flash->error(__('アカウントの作成に失敗しました。もう一度お試しください。'));
+            $this->Flash->error(__('The user could not be saved. Please, try again.'));
         }
-        $this->set(compact('user', 'title'));
+        $this->set(compact('user'));
     }
 
-    public function login()
+    /**
+     * Edit method
+     *
+     * @param string|null $id User id.
+     * @return \Cake\Http\Response|null|void Redirects on successful edit, renders view otherwise.
+     * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
+     */
+    public function edit($id = null)
     {
-        $title = 'ログイン';
-        $this->request->allowMethod(['get', 'post']);
-        $result = $this->Authentication->getResult();
-        if ($result->isValid()) {
-            $redirect = $this->request->getQuery('redirect', [
-                'controller' => 'Users',
-                'action' => 'index',
-            ]);
+        $user = $this->Users->get($id, [
+            'contain' => [],
+        ]);
+        if ($this->request->is(['patch', 'post', 'put'])) {
+            $user = $this->Users->patchEntity($user, $this->request->getData());
+            if ($this->Users->save($user)) {
+                $this->Flash->success(__('The user has been saved.'));
 
-            return $this->redirect($redirect);
+                return $this->redirect(['action' => 'index']);
+            }
+            $this->Flash->error(__('The user could not be saved. Please, try again.'));
         }
-
-        // ユーザーの送信と認証に失敗した場合のエラー表示
-        if ($this->request->is('post') && !$result->isValid()) {
-            $this->Flash->error(__('メールアドレス、またはパスワードが間違っています。'));
-        }
-        $this->set(compact('title'));
+        $this->set(compact('user'));
     }
 
-    public function logout()
+    /**
+     * Delete method
+     *
+     * @param string|null $id User id.
+     * @return \Cake\Http\Response|null|void Redirects to index.
+     * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
+     */
+    public function delete($id = null)
     {
-        $result = $this->Authentication->getResult();
-        if ($result->isValid()) {
-            $this->Authentication->logout();
-            return $this->redirect(['controller' => 'Users', 'action' => 'login']);
+        $this->request->allowMethod(['post', 'delete']);
+        $user = $this->Users->get($id);
+        if ($this->Users->delete($user)) {
+            $this->Flash->success(__('The user has been deleted.'));
+        } else {
+            $this->Flash->error(__('The user could not be deleted. Please, try again.'));
         }
+
+        return $this->redirect(['action' => 'index']);
     }
 }

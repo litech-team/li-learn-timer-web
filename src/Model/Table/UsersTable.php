@@ -47,8 +47,9 @@ class UsersTable extends Table
 
         $this->addBehavior('Timestamp');
 
-        $this->hasMany('Tasks')
-            ->setForeignKey('user_id');
+        $this->hasMany('Tasks', [
+            'foreignKey' => 'user_id',
+        ]);
     }
 
     /**
@@ -60,20 +61,35 @@ class UsersTable extends Table
     public function validationDefault(Validator $validator): Validator
     {
         $validator
-            ->scalar('id')
-            ->allowEmptyString('id', null, 'create');
-
-        $validator
-            ->scalar('serial_number')
-            ->lengthBetween('serial_number', [12, 12], '12文字で入力してください')
-            ->requirePresence('serial_number', 'create', '値が不正です。')
-            ->notEmptyString('serial_number', '入力必須項目です。');
+            ->email('email')
+            ->requirePresence('email', 'create')
+            ->notEmptyString('email');
 
         $validator
             ->scalar('password')
-            ->lengthBetween('password', [8, 100], 'パスワードは8文字以上100文字以内で入力してください。')
-            ->requirePresence('password', 'create', '値が不正です。')
-            ->notEmptyString('password', '入力必須項目です。');
+            ->maxLength('password', 100)
+            ->requirePresence('password', 'create')
+            ->notEmptyString('password');
+
+        $validator
+            ->scalar('ip')
+            ->maxLength('ip', 40)
+            ->requirePresence('ip', 'create')
+            ->notEmptyString('ip');
+
+        $validator
+            ->scalar('mac')
+            ->maxLength('mac', 12)
+            ->requirePresence('mac', 'create')
+            ->notEmptyString('mac');
+
+        $validator
+            ->scalar('is_tmp_account')
+            ->notEmptyString('is_tmp_account');
+
+        $validator
+            ->integer('unlock_ticket_count')
+            ->notEmptyString('unlock_ticket_count');
 
         return $validator;
     }
@@ -87,7 +103,7 @@ class UsersTable extends Table
      */
     public function buildRules(RulesChecker $rules): RulesChecker
     {
-        $rules->add($rules->isUnique(['serial_number']), ['errorField' => 'serial_number']);
+        $rules->add($rules->isUnique(['email']), ['errorField' => 'email']);
 
         return $rules;
     }

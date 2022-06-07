@@ -21,7 +21,7 @@ class UsersTableTest extends TestCase
     /**
      * Fixtures
      *
-     * @var array
+     * @var array<string>
      */
     protected $fixtures = [
         'app.Users',
@@ -33,7 +33,7 @@ class UsersTableTest extends TestCase
      *
      * @return void
      */
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
         $config = $this->getTableLocator()->exists('Users') ? [] : ['className' => UsersTable::class];
@@ -45,7 +45,7 @@ class UsersTableTest extends TestCase
      *
      * @return void
      */
-    public function tearDown(): void
+    protected function tearDown(): void
     {
         unset($this->Users);
 

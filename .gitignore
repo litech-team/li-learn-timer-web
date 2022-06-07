@@ -14,8 +14,7 @@
 .Spotlight-V100
 .Trashes
 # Icon must end with two \r
-Icon
-
+Icon
 ehthumbs.db
 Thumbs.db
 .directory
@@ -42,8 +41,12 @@ tests.sqlite
 nbproject/*
 # Visual Studio Code
 .vscode
+# nova
+.nova
 # Sass preprocessor
 .sass-cache/
-
-# Node.js
-node_modules
+# node
+/node_modules/*
+# yarn
+yarn-debug.log
+yarn-error.log
